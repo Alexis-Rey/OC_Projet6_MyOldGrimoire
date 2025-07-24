@@ -1,1 +1,5 @@
-node_modules
+# Node modules
+node_modules/
+
+# Variables d’environnement privées
+.env

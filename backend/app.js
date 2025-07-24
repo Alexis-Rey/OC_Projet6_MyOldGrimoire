@@ -1,7 +1,21 @@
 const express = require('express');
-// const mongoose = require('mongoose');
-
+const mongoose = require('mongoose');
 const app = express();
+
+const MONGO_URI = process.env.MONGODB_URI;
+if (!MONGO_URI) {
+  console.error('MONGODB_URI non défini dans backend/.env');
+  process.exit(1);
+}
+mongoose.connect(MONGO_URI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+})
+.then(() => console.log('Connexion à MongoDB établie'))
+.catch(err => {
+  console.error('Échec de la connexion MongoDB :', err);
+  process.exit(1);
+});
 // const path = require('path');
 // const stuffRoutes = require('./routes/stuff');
 // const userRoutes = require('./routes/user');
