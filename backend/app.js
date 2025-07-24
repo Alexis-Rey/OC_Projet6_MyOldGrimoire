@@ -8,13 +8,6 @@ const app = express();
 // Permet d'analyser le coprs requête et de le rendre exploitable
 app.use(express.json());
 
-// Logique connextion mangodb
-// mongoose.connect('mongodb+srv://alex:alex159357@cluster0.1u0201v.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0',
-//   { useNewUrlParser: true,
-//     useUnifiedTopology: true })
-//   .then(() => console.log('Connexion à MongoDB réussie !'))
-//   .catch(() => console.log('Connexion à MongoDB échouée !'));
-
 // CORS
 app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
