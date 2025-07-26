@@ -1,29 +1,28 @@
-// Package permettant de gérer les fichiers entrants
+// Bibilothèque permettant de gérer les fichiers entrants
 const multer = require('multer');
 
-// Déclaration d'un dictionnaire avec les extensiosn acceptées
+// Seuls ces mimetypes sont autorisés
 const MIME_TYPES = {
-  'image/jpg': 'jpg',
+  'image/jpg':  'jpg',
   'image/jpeg': 'jpg',
-  'image/png': 'png'
+  'image/png':  'png',
+  'image/webp': 'webp'
 };
 
-/* Variable storage qui va contenir la méthode dickStorage pour indiquer à multer comment gérer les fichiers entrants notamment le dosier de déstination des fichiers
- mais également leurs noms via une mise en forme qui garde nom_du_fichier+date+extension*/
-const storage = multer.diskStorage({
-  destination: (req, file, callback) => {
-    callback(null, 'images');
-  },
-  filename: (req, file, callback) => {
-    const name = file.originalname.split(' ').join('_');
-    const extension = MIME_TYPES[file.mimetype];
-    callback(null, name + Date.now() + '.' + extension);
+// Filtre pour n’accepter que les extensions du dictionnaire sinon génération d'erreur 
+const fileFilter = (req, file, cb) => {
+  if (MIME_TYPES[file.mimetype]) {
+    cb(null, true);
+  } else {
+    cb(new Error('Seules les images JPG, PNG et Webp sont autorisées'), false);
   }
-});
+};
 
-// Enfin on exporte le middleware pour une future utilisation en lui précisant qu'on ne géreras qu'un seul fichier 'image' entrant à la fois
-module.exports = multer({storage: storage}).single('image');
+// Stockage en mémoire pour traitement ultérieur avec Sharp dans imagesOptimizer.js
+const storage = multer.memoryStorage();
 
-/* La méthode diskStorage() configure le chemin et le nom de fichier pour les fichiers entrants.
-La méthode single() crée un middleware qui capture les fichiers d'un certain type (passé en argument), 
-et les enregistre au système de fichiers du serveur à l'aide du storage configuré. */
+module.exports = multer({
+  storage,
+  fileFilter,
+  limits: { fileSize: 2 * 1024 * 1024 }  // 2 Mo max
+}).single('image');
