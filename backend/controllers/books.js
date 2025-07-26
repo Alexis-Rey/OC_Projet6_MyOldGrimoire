@@ -61,7 +61,7 @@ exports.ModifyBook = (req,res,next)=>{
    Book.findOne({_id: req.params.id})
        .then((book) => {
            if (book.userId != req.auth.userId) {
-               res.status(401).json({ message : 'Not authorized'});
+               res.status(403).json({ message : 'Not authorized'});
            } else {
             // Ajout perso, on vérifie que lors de la modif objet il y a une nouvelle image: si oui on supprime l'ancienne sinon on la conserve pour la modif
             const delOldBook = book.imageUrl.split('/images/')[1];
@@ -78,9 +78,7 @@ exports.ModifyBook = (req,res,next)=>{
               }
            }
        })
-       .catch((error) => {
-           res.status(400).json({ error });
-       });
+       .catch(error => res.status(400).json({ error }));
 };
 
 exports.GetOneBook = (req,res,next)=>{

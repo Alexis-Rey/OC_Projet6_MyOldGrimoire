@@ -4,6 +4,7 @@ const app = express();
 const path = require('path');
 const booksRoutes= require('./routes/books');
 const userRoutes = require('./routes/user');
+const errorHandler = require('./middleware/errorHandler');
 
 const requiredEnvs = ['MONGODB_URI', 'JWT_SECRET'];
 requiredEnvs.forEach(key => {
@@ -33,5 +34,5 @@ app.use((req, res, next) => {
 app.use('/images', express.static(path.join(__dirname,'images')));
 app.use('/api/books', booksRoutes);
 app.use('/api/auth', userRoutes);
-
+app.use(errorHandler);
 module.exports = app;

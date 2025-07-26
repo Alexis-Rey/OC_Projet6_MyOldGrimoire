@@ -10,6 +10,6 @@ module.exports = (req, res, next) => {
        };
     next();
    } catch(error) {
-       res.status(403).json({ error },{message:' unauthorized request'});
+       res.status(401).json({ error },{message:'Invalid or expired token'});
    }
 };
