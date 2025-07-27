@@ -88,3 +88,28 @@ exports.GetOneBook = (req,res,next)=>{
 exports.GetAllBooks = (req, res, next) => {
   Book.find().then(books => res.status(200).json(books)).catch(error => res.status(400).json({error}));
 };
+
+exports.RatingBook = (req, res, next) => {
+  const userId = req.auth.userId;
+  const grade  = Number(req.body.rating);
+
+  // On récupère les infos du livre à noter
+  Book.findOne({_id : req.params.id})
+    .then(book =>{
+        // Ici on vérifie que l'utilisateur n'a pas déja noté le livre
+        if (book.ratings.some(alreadyRate => alreadyRate.userId.toString() === userId)) {
+          return res.status(400).json({ message: 'Vous avez déjà noté ce livre' });
+        }
+        // On ajouter la note
+        book.ratings.push({ userId, grade });
+        /* On calcule la moyenne en faisant la somme de tout les notes concernant le livre dans la bdd avec reduce qui commence à 0 et ajoute à chaque itération l'ancienne note
+        et la nouvelle*/
+        const sum = book.ratings.reduce((oldRating, nextRating) => oldRating + nextRating.grade, 0);
+        book.averageRating = sum / book.ratings.length;
+
+        // 6) Sauvegarder et renvoyer le livre mis à jour
+        return book.save()
+          .then(updatedBook => res.status(200).json(updatedBook));
+    })
+    .catch(error => res.status(500).json({ error }));
+};
