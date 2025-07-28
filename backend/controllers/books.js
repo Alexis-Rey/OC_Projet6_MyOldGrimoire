@@ -113,3 +113,13 @@ exports.RatingBook = (req, res, next) => {
     })
     .catch(error => res.status(500).json({ error }));
 };
+
+exports.GetBestBooks = (req, res, next) => {
+  Book.find()
+  .then(books=>{
+      const arrayArrangedInRate = books.sort((a , b)  => b.averageRating - a.averageRating);
+      const best3Books = arrayArrangedInRate.slice(0,3);
+      res.status(200).json(best3Books);
+    })
+  .catch(error => res.status(500).json({error}));
+};

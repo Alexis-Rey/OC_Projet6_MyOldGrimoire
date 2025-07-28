@@ -6,11 +6,13 @@ const multer = require('../middleware/multer-config');
 const bookCtrl = require('../controllers/books');
 const imagesOptimizer = require('../middleware/imagesOptimizer');
 
+router.get('/bestrating', bookCtrl.GetBestBooks);
 router.post('/',auth, multer,imagesOptimizer, bookCtrl.CreateBook);
 router.delete('/:id',auth, bookCtrl.DeleteBook);
 router.put('/:id',auth, multer,imagesOptimizer, bookCtrl.ModifyBook);
 router.get('/:id', bookCtrl.GetOneBook);
 router.get('/', bookCtrl.GetAllBooks);
 router.post('/:id/rating',auth,bookCtrl.RatingBook);
+
 
 module.exports = router;

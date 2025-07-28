@@ -13,6 +13,7 @@ requiredEnvs.forEach(key => {
     process.exit(1);
   }
 });
+// Connexion à la BDD MangoDB
 mongoose.connect(process.env.MONGODB_URI)
 .then(() => console.log('Connexion à MongoDB établie'))
 .catch(err => {
