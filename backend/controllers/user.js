@@ -11,7 +11,7 @@ exports.signUp = (req,res,next) => {
         });
         user.save()
         .then(()=> res.status(201).json({message:'Utilisateur ajouté avec succès'}))
-        .catch(() => res.status(400).json({message:'Inscription impossible, vous possedez déjà un compte chez nous'}));
+        .catch(() => res.status(409).json({message:'Inscription impossible, vous possedez déjà un compte chez nous'}));
     })
     .catch(error => res.status(500).json({error}));
 };
